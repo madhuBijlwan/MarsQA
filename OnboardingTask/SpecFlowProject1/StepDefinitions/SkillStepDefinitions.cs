@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using OnboardingMars.Pages;
+using OpenQA.Selenium.DevTools.V109.Page;
 using System;
 using TechTalk.SpecFlow;
 
@@ -10,44 +11,50 @@ namespace OnboardingMars.StepDefinitions
     {
         //Create instance of Skills Page
         Skills skillObj = new Skills();
+
         
-        [When(@"I add a new skill")]
-        public void WhenIAddANewSkill()
+
+        [When(@"I add '([^']*)' and '([^']*)'")]
+        public void WhenIAddAnd(string skillName, string skillLevel)
         {
-            //navigate to the skill page
+            // Navigate to Skill tab page
             skillObj.navigateSkillTab();
-            
-            //Add a new skill
-            skillObj.addSkills();
-            
+
+         
+            // Add skill name and level
+            skillObj.addSkills(skillName,skillLevel);
+
         }
 
-        [Then(@"I should view the new skill I added")]
-        public void ThenIShouldViewTheNewSkillIAdded()
+        
+        [Then(@"I should view the '([^']*)' that I added")]
+        public void ThenIShouldViewTheThatIAdded(string skillName)
         {
             skillObj.navigateSkillTab();
-            var addSkillAlert = skillObj.alertWindow();
-            Assert.That(addSkillAlert == "C++ has been added to your skills", "Failed to add a skill");
+            var addedSkillText = skillObj.addedSkill(skillName);
+            Assert.That(addedSkillText ==skillName, "failed to add a skill");
         }
 
-        [When(@"I edit existing skill")]
-        public void WhenIEditExistingSkill()
+        [When(@"I edit '([^']*)' skill")]
+        public void WhenIEditSkill(string editSkillName)
         {
             //Navigate to the skill tab page
             skillObj.navigateSkillTab();
 
             //calling updateSkills() method of Skills class
-            skillObj.updateSkills();
+            skillObj.updateSkills(editSkillName);
         }
 
-        [Then(@"I should view the updated skill")]
-        public void ThenIShouldViewTheUpdatedSkill()
+       
+        [Then(@"I should view the updated '([^']*)' skill")]
+        public void ThenIShouldViewTheUpdatedSkill(string editSkillName)
         {
             skillObj.navigateSkillTab();
-           
-            var updatedSkillAlert = skillObj.alertWindow();
-            Assert.That(updatedSkillAlert=="Java has been updated to your skills", "failed to update skill");
+            var updatedSkillText = skillObj.alertWindow();
+            Assert.That(updatedSkillText == "html has been updated to your skills", "Failed to update skill");
         }
+           
+        
 
         [When(@"I delete existing skill")]
         public void WhenIDeleteExistingSkill()
@@ -58,15 +65,17 @@ namespace OnboardingMars.StepDefinitions
             //calling deleteSkills() method of Skills class
             skillObj.deleteSkills();
         }
+       
 
-        [Then(@"I should successfully deleted the skill")]
-        public void ThenIShouldSuccessfullyDeletedTheSkill()
+        [Then(@"I should successfully deleted '([^']*)' skill")]
+        public void ThenIShouldSuccessfullyDeletedSkill(string skillName)
         {
             skillObj.navigateSkillTab();
-            var delSkillAlert = skillObj.alertWindow();
-            Assert.That(delSkillAlert == "Java has been deleted", "Failed to delete a skill");
+            var deletedSkillText = skillObj.deletedSkill(skillName);
+            Assert.That(deletedSkillText!= skillName,"Failed to delete skill");
         }
+
     }
 
-    
+
 }

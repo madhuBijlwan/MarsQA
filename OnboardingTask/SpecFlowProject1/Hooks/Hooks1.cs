@@ -20,7 +20,7 @@ namespace OnboardingMars.Hooks
         [AfterScenario]
         public void tearDown()
         {
-           signInObj.signOut();
+          // signInObj.signOut();
            driver.Close();
         }
     }
